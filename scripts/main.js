@@ -1,6 +1,10 @@
+var DETAIL_FRAME_SELECTOR = '[data-image-role="frame"]';
 var DETAIL_IMAGE_SELECTOR = '[data-image-role="target"]';
 var DETAIL_TITLE_SELECTOR = '[data-image-role="title"]';
 var THUMBNAIL_LINK_SELECTOR = '[data-image-role="trigger"]';
+var HIDDEN_DETAIL_CLASS = 'hidden-detail';
+var TINY_CLASS = 'is-tiny';
+var ESC_KEYCODE = 27;
 
 function setDetails(imgUrl,title) {
     'use strict';
@@ -31,6 +35,33 @@ function addThumbClickHandler(thumb){
     thumb.addEventListener('click',function(event){
         event.preventDefault();
         setDetailsFromThumb(thumb);
+        showDetails();
+    });
+}
+
+function hideDetails() {
+    'use strict';
+    document.body.classList.add(HIDDEN_DETAIL_CLASS);
+}
+
+function showDetails() {
+    'use strict';
+    var frame = document.querySelector(DETAIL_FRAME_SELECTOR);
+    document.body.classList.remove(HIDDEN_DETAIL_CLASS);
+    frame.classList.add(TINY_CLASS);
+    setTimeout(function(){
+        frame.classList.remove(TINY_CLASS);
+    },50);
+}
+
+function addKeyPressHandler(){
+    'use strict';
+    document.body.addEventListener('keyup',function(event){
+        event.preventDefault();
+        console.log(event.keyCode);
+        if(event.keyCode == ESC_KEYCODE){
+            hideDetails();
+        }
     });
 }
 
@@ -39,6 +70,7 @@ function initializeEvents() {
     var thumbnails = document.querySelectorAll(THUMBNAIL_LINK_SELECTOR);
     var thumbnailArr = [].slice.call(thumbnails);
     thumbnailArr.forEach(addThumbClickHandler);
+    addKeyPressHandler();
 }
 
 initializeEvents();
